@@ -78,7 +78,7 @@ FT_Bitmap* char2bitmap(unsigned long ch,const FreetypeHadle *hadle)
     }
     return &hadle->ft2_face->glyph->bitmap;
 }
-FreetypeHadle *InitFreetype(char *ttf_path)
+FreetypeHadle *InitFreetype(char *ttf_path,unsigned int size)
 {
     FreetypeHadle *hadle =(FreetypeHadle *)malloc(sizeof(FreetypeHadle)) ;
     FT_Error	err;
@@ -93,7 +93,7 @@ FreetypeHadle *InitFreetype(char *ttf_path)
     {
         return NULL;
     }
-    err = FT_Set_Pixel_Sizes( hadle->ft2_face, 100, 100);
+    err = FT_Set_Pixel_Sizes( hadle->ft2_face, 0, size);
     if (err != FT_Err_Ok)
     {
         return NULL;

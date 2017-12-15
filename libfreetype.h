@@ -44,11 +44,12 @@ void draw_rgba( FT_Bitmap*  bitmap,signed int x,signed int y,
 FT_Bitmap *char2bitmap(unsigned long ch,const FreetypeHadle *hadle);
 
 /**
- * @brief InitFreetype 初始化一个Freetype
- * @param ttf_path ttf文件路径
- * @return 失败返回NULL
+ * @brief InitFreetype  初始化一个Freetype
+ * @param ttf_path      ttf文件路径
+ * @param size          输出字符大小，单位-像素
+ * @return              失败返回NULL
  */
-FreetypeHadle *InitFreetype(char *ttf_path);
+FreetypeHadle *InitFreetype(char *ttf_path, unsigned int size);
 
 /**
  * @brief CloseFreetype 关闭一个Freetype
