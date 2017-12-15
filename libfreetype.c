@@ -65,7 +65,7 @@ void draw_rgba( const FreetypeHadle *hadle,signed int x,signed int y,
     }
 }
 
-int char2ftbitmap(unsigned long ch,const FreetypeHadle *hadle,unsigned int *width,unsigned int *height)
+int char2ftbitmap(wchar_t ch,const FreetypeHadle *hadle,unsigned int *width,unsigned int *height)
 {
     if(FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT ) &&
                 FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_DEFAULT ))
@@ -108,6 +108,8 @@ FreetypeHadle *initFreetype(const char *ttf_path, unsigned int size)
     {
         return NULL;
     }
+    FT_Select_Charmap( hadle->ft2_face, FT_ENCODING_UNICODE);
+
     return hadle;
 }
 void closeFreetype(FreetypeHadle *hadle)
@@ -118,7 +120,7 @@ void closeFreetype(FreetypeHadle *hadle)
         FT_Done_FreeType( hadle->ft2_library );
     }
 }
-int str2rgba(const FreetypeHadle *hadle, unsigned long *str,int len,
+int str2rgba(const FreetypeHadle *hadle, wchar_t *str,int len,
               unsigned int size,signed int x, signed int y,
               unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba)
 {

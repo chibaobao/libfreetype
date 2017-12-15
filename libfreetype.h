@@ -43,7 +43,7 @@ void draw_rgba( const FreetypeHadle *hadle,signed int x,signed int y,
  * @param height        [out] 字符的实际高度
  * @return              成功0,失败-1
  */
-int char2ftbitmap(unsigned long ch,const FreetypeHadle *hadle,unsigned int *width,unsigned int *height);
+int char2ftbitmap(wchar_t ch,const FreetypeHadle *hadle,unsigned int *width,unsigned int *height);
 
 /**
  * @brief initFreetype  初始化一个Freetype
@@ -72,7 +72,7 @@ void closeFreetype(FreetypeHadle *hadle);
  * @param buf_height    要绘制到的图像的高
  * @param rgba          要绘制到图像的字的颜色如（0xffffffff）
  */
-int str2rgba(const FreetypeHadle *hadle, unsigned long *str,int len,
+int str2rgba(const FreetypeHadle *hadle, wchar_t *str,int len,
               unsigned int size,signed int x, signed int y,
               unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba);
 #ifdef __cplusplus
