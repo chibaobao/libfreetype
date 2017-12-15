@@ -5,7 +5,9 @@
 
 ## 使用
 
-安装freetype2，引用libfreetye.c libfreetye.h编译加上-lfreetype -lm即可
+1. 安装freetype2
+2. 引用libfreetye.c libfreetye.h
+3. 编译加上-lfreetype -lm即可
 
 ## 文件说明
 
