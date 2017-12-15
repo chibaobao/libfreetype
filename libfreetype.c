@@ -6,6 +6,13 @@
 #include <freetype/ftglyph.h>
 
 #include "libfreetype.h"
+typedef struct FreetypeHadle_
+{
+    FT_Bitmap   *bitmap;
+    FT_Library  ft2_library;
+    FT_Face		ft2_face;
+}FreetypeHadle;
+
 void draw_bitmap( FT_Bitmap*  bitmap,signed int x,signed int y,
                   unsigned char* buf,signed int buf_width,signed int buf_height,const char byte)
 {
@@ -55,37 +62,49 @@ void draw_rgba( FT_Bitmap*  bitmap,signed int x,signed int y,
         }
     }
 }
-FT_Bitmap *char2bitmap(const unsigned long ch,char * ttf_path)
+
+FT_Bitmap* char2bitmap(unsigned long ch,const FreetypeHadle *hadle)
 {
-    FT_Library	ft2_library;
-    FT_Face		ft2_face;
-    FT_Error	err;
-    /* Init freetype library */
-    err = FT_Init_FreeType(&ft2_library);
-    if (err != FT_Err_Ok)
-    {
-        return NULL;
-    }
-    err = FT_New_Face( ft2_library, ttf_path, 0, &ft2_face );
-    if (err != FT_Err_Ok)
-    {
-        return NULL;
-    }
-    err = FT_Set_Pixel_Sizes( ft2_face, 100, 100);
-    if (err != FT_Err_Ok)
-    {
-        return NULL;
-    }
-    if(FT_Load_Glyph( ft2_face, FT_Get_Char_Index(ft2_face, ch), FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT ) &&
-                FT_Load_Glyph( ft2_face, FT_Get_Char_Index(ft2_face, ch), FT_LOAD_DEFAULT ))
+    if(FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT ) &&
+                FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_DEFAULT ))
     {
         return NULL;
     }
     //	FT_Load_Char(ft2_face, ucode, FT_LOAD_DEFAULT );
 
-    if(FT_Render_Glyph( ft2_face->glyph, FT_RENDER_MODE_NORMAL))
+    if(FT_Render_Glyph( hadle->ft2_face->glyph, FT_RENDER_MODE_NORMAL))
     {
         return NULL;
     }
-    return &ft2_face->glyph->bitmap;
+    return &hadle->ft2_face->glyph->bitmap;
+}
+FreetypeHadle *InitFreetype(char *ttf_path)
+{
+    FreetypeHadle *hadle =(FreetypeHadle *)malloc(sizeof(FreetypeHadle)) ;
+    FT_Error	err;
+    /* Init freetype library */
+    err = FT_Init_FreeType(&hadle->ft2_library);
+    if (err != FT_Err_Ok)
+    {
+        return NULL;
+    }
+    err = FT_New_Face( hadle->ft2_library, ttf_path, 0, &hadle->ft2_face );
+    if (err != FT_Err_Ok)
+    {
+        return NULL;
+    }
+    err = FT_Set_Pixel_Sizes( hadle->ft2_face, 100, 100);
+    if (err != FT_Err_Ok)
+    {
+        return NULL;
+    }
+    return hadle;
+}
+void CloseFreetype(FreetypeHadle *hadle)
+{
+    if(hadle != NULL)
+    {
+        FT_Done_Face( hadle->ft2_face );
+        FT_Done_FreeType( hadle->ft2_library );
+    }
 }

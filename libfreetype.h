@@ -7,6 +7,8 @@ extern "C" {
 #include <stdio.h>
 #include <stdio.h>
 typedef struct FT_Bitmap_ FT_Bitmap;
+typedef struct FreetypeHadle_ FreetypeHadle;
+
 /**
  * @brief draw_bitmap   将一个FT_Bitmap(一个字)，绘制到buf图像(8位灰度图)上
  * @param bitmap        [out] 一个FT_Bitmap结构体，里面包含一个字形buff已经，buff所构成的图像的信息
@@ -36,11 +38,23 @@ void draw_rgba( FT_Bitmap*  bitmap,signed int x,signed int y,
 /**
  * @brief char2bitmap   将一个字符转化成FT_Bitmap类型
  * @param ch            要转化的字符
- * @param ttf_path      指定一个ttf文件路径
+ * @param hadle         InitFreetype返回的hadle
  * @return              转化失败返回NULL
  */
-FT_Bitmap *char2bitmap(const unsigned long ch,char * ttf_path);
+FT_Bitmap *char2bitmap(unsigned long ch,const FreetypeHadle *hadle);
 
+/**
+ * @brief InitFreetype 初始化一个Freetype
+ * @param ttf_path ttf文件路径
+ * @return 失败返回NULL
+ */
+FreetypeHadle *InitFreetype(char *ttf_path);
+
+/**
+ * @brief CloseFreetype 关闭一个Freetype
+ * @param hadle
+ */
+void CloseFreetype(FreetypeHadle *hadle);
 #ifdef __cplusplus
 }
 #endif
