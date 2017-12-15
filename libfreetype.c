@@ -13,9 +13,10 @@ typedef struct FreetypeHadle_
     FT_Face		ft2_face;
 }FreetypeHadle;
 
-void draw_bitmap( FT_Bitmap*  bitmap,signed int x,signed int y,
+void draw_bitmap( const FreetypeHadle *hadle,signed int x,signed int y,
                   unsigned char* buf,signed int buf_width,signed int buf_height,const char byte)
 {
+    FT_Bitmap* bitmap= &hadle->ft2_face->glyph->bitmap;
     signed int  i, j, p, q;
     signed int  x_max = x + bitmap->width;
     signed int  y_max = y + bitmap->rows;
@@ -37,9 +38,10 @@ void draw_bitmap( FT_Bitmap*  bitmap,signed int x,signed int y,
         }
     }
 }
-void draw_rgba( FT_Bitmap*  bitmap,signed int x,signed int y,
+void draw_rgba( const FreetypeHadle *hadle,signed int x,signed int y,
                   unsigned char* buf,signed int buf_width,signed int buf_height,signed int rgba)
 {
+    FT_Bitmap* bitmap= &hadle->ft2_face->glyph->bitmap;
     signed int  i, j, p, q;
     signed int  x_max = x + bitmap->width;
     signed int  y_max = y + bitmap->rows;
@@ -54,7 +56,7 @@ void draw_rgba( FT_Bitmap*  bitmap,signed int x,signed int y,
                 continue;
             //原算法
             //*(buf+j*buf_width+i) |= bitmap->buffer[q * bitmap->width + p];
-            //改动后 对不是黑色区域（也就是字形）赋值成白色，非字形位置不动
+            //改动后 对不是黑色区域（也就是字形）赋值成rgba，非字形位置不动
             if(bitmap->buffer[q * bitmap->width + p] != 0x00)
             {
                 *(buf_tmp + j*buf_width+i) = rgba;
@@ -63,22 +65,30 @@ void draw_rgba( FT_Bitmap*  bitmap,signed int x,signed int y,
     }
 }
 
-FT_Bitmap* char2bitmap(unsigned long ch,const FreetypeHadle *hadle)
+int char2ftbitmap(unsigned long ch,const FreetypeHadle *hadle,unsigned int *width,unsigned int *height)
 {
     if(FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT ) &&
                 FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_DEFAULT ))
     {
-        return NULL;
+        return -1;
     }
     //	FT_Load_Char(ft2_face, ucode, FT_LOAD_DEFAULT );
 
     if(FT_Render_Glyph( hadle->ft2_face->glyph, FT_RENDER_MODE_NORMAL))
     {
-        return NULL;
+        return -1;
     }
-    return &hadle->ft2_face->glyph->bitmap;
+    if(width != NULL)
+    {
+        *width = hadle->ft2_face->glyph->bitmap.width;
+    }
+    if(height != NULL)
+    {
+        *height = hadle->ft2_face->glyph->bitmap_top;
+    }
+    return 0;
 }
-FreetypeHadle *InitFreetype(char *ttf_path,unsigned int size)
+FreetypeHadle *initFreetype(const char *ttf_path, unsigned int size)
 {
     FreetypeHadle *hadle =(FreetypeHadle *)malloc(sizeof(FreetypeHadle)) ;
     FT_Error	err;
@@ -100,11 +110,29 @@ FreetypeHadle *InitFreetype(char *ttf_path,unsigned int size)
     }
     return hadle;
 }
-void CloseFreetype(FreetypeHadle *hadle)
+void closeFreetype(FreetypeHadle *hadle)
 {
     if(hadle != NULL)
     {
         FT_Done_Face( hadle->ft2_face );
         FT_Done_FreeType( hadle->ft2_library );
     }
+}
+int str2rgba(const FreetypeHadle *hadle, unsigned long *str,int len,
+              unsigned int size,signed int x, signed int y,
+              unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba)
+{
+    unsigned int w = 0 ,h = 0;
+    for(int i = 0 ; i<len;i++)
+    {
+        if(char2ftbitmap(str[i],hadle,&w,&h) == -1)
+        {
+            return -1;
+        }
+        y = size - h;
+        draw_rgba(hadle,x,y,
+                   buf,buf_width,buf_height,rgba);
+        x+=w+6;
+    }
+    return 0;
 }
