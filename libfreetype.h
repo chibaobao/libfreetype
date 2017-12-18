@@ -49,7 +49,7 @@ int char2ftbitmap(wchar_t ch,const FreetypeHadle *hadle,unsigned int *width,unsi
  * @brief initFreetype  初始化一个Freetype
  * @param ttf_path      ttf文件路径
  * @param size          输出字符大小，单位-像素
- * @return              成功返回一个freetype句柄，失败返回NULL
+ * @return              0，失败-1
  */
 FreetypeHadle *initFreetype(const char *ttf_path, unsigned int size);
 
