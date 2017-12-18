@@ -32,7 +32,7 @@ int main()
     QImage img3(640,480,QImage::Format_RGBA8888);
     img3.fill(QColor(255, 255, 255, 255));
     str2rgba(hadle,aaa,sizeof(aaa)/4,
-                60,0,0,
+                0,0,
                (unsigned char*)img3.bits(),img3.width(),img3.height(),0xFF303099);
     img3.save("ccc.bmp");
 

@@ -64,7 +64,6 @@ void closeFreetype(FreetypeHadle *hadle);
  * @param bitmap        [out] 一个FT_Bitmap结构体，里面包含一个字形buff已经，buff所构成的图像的信息
  * @param str           要转化的字符串
  * @param len           字符串长度
- * @param size          输出字符的一个字符的大小，单位-像素
  * @param x             将FT_Bitmap绘制在buf图像的x坐标
  * @param y             将FT_Bitmap绘制在buf图像的y坐标
  * @param buf           要绘制到的图像的buf
@@ -73,7 +72,7 @@ void closeFreetype(FreetypeHadle *hadle);
  * @param rgba          要绘制到图像的字的颜色如（0xffffffff）
  */
 int str2rgba(const FreetypeHadle *hadle, wchar_t *str,int len,
-              unsigned int size,signed int x, signed int y,
+              signed int x, signed int y,
               unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba);
 #ifdef __cplusplus
 }

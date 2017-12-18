@@ -11,6 +11,7 @@ typedef struct FreetypeHadle_
     FT_Bitmap   *bitmap;
     FT_Library  ft2_library;
     FT_Face		ft2_face;
+    unsigned int size;
 }FreetypeHadle;
 
 void draw_bitmap( const FreetypeHadle *hadle,signed int x,signed int y,
@@ -118,10 +119,11 @@ void closeFreetype(FreetypeHadle *hadle)
     {
         FT_Done_Face( hadle->ft2_face );
         FT_Done_FreeType( hadle->ft2_library );
+        free(hadle);
     }
 }
 int str2rgba(const FreetypeHadle *hadle, wchar_t *str,int len,
-              unsigned int size,signed int x, signed int y,
+              signed int x, signed int y,
               unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba)
 {
     unsigned int w = 0 ,h = 0;
@@ -131,7 +133,7 @@ int str2rgba(const FreetypeHadle *hadle, wchar_t *str,int len,
         {
             return -1;
         }
-        y = size - h;
+        y = hadle->size - h;
         draw_rgba(hadle,x,y,
                    buf,buf_width,buf_height,rgba);
         x+=w+6;
