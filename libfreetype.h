@@ -7,11 +7,11 @@ extern "C" {
 #include <stdio.h>
 #include <stdio.h>
 typedef struct FT_Bitmap_ FT_Bitmap;
-typedef struct FreetypeHadle_ FreetypeHadle;
+typedef struct FreetypeHandle_ FreetypeHandle;
 
 /**
  * @brief draw_bitmap   将freetype句柄中char2bitmap转化的字符，绘制到buf图像(8位灰度图)上
- * @param hadle         一个freetype句柄
+ * @param handle         一个freetype句柄
  * @param x             将FT_Bitmap绘制在buf图像的x坐标
  * @param y             将FT_Bitmap绘制在buf图像的y坐标
  * @param buf           要绘制到的图像的buf
@@ -19,7 +19,7 @@ typedef struct FreetypeHadle_ FreetypeHadle;
  * @param buf_height    要绘制到的图像的高
  * @param byte          要绘制到图像的字的颜色
  */
-void draw_bitmap(const FreetypeHadle *hadle, signed int x, signed int y,
+void draw_bitmap(const FreetypeHandle *handle, signed int x, signed int y,
                   unsigned char* buf, signed int buf_width, signed int buf_height, const char byte);
 
 /**
@@ -32,18 +32,18 @@ void draw_bitmap(const FreetypeHadle *hadle, signed int x, signed int y,
  * @param buf_height    要绘制到的图像的高
  * @param byte          要绘制到图像的字的颜色如（0xffffffff）
  */
-void draw_rgba( const FreetypeHadle *hadle,signed int x,signed int y,
+void draw_rgba( const FreetypeHandle *handle,signed int x,signed int y,
                   unsigned char* buf,signed int buf_width,signed int buf_height,signed int rgba);
 
 /**
  * @brief char2bitmap   将一个字符转化成FT_Bitmap类型
  * @param ch            要转化的字符
- * @param hadle         InitFreetype返回的hadle
+ * @param handle         InitFreetype返回的handle
  * @param width         [out] 字符的实际宽度
  * @param height        [out] 字符的实际高度
  * @return              成功0,失败-1
  */
-int char2ftbitmap(wchar_t ch,const FreetypeHadle *hadle,unsigned int *width,unsigned int *height);
+int char2ftbitmap(wchar_t ch,const FreetypeHandle *handle,unsigned int *width,unsigned int *height);
 
 /**
  * @brief initFreetype  初始化一个Freetype
@@ -51,13 +51,13 @@ int char2ftbitmap(wchar_t ch,const FreetypeHadle *hadle,unsigned int *width,unsi
  * @param size          输出字符大小，单位-像素
  * @return              0，失败-1
  */
-FreetypeHadle *initFreetype(const char *ttf_path, unsigned int size);
+FreetypeHandle *initFreetype(const char *ttf_path, unsigned int size);
 
 /**
  * @brief closeFreetype 关闭一个Freetype
- * @param hadle
+ * @param handle
  */
-void closeFreetype(FreetypeHadle *hadle);
+void closeFreetype(FreetypeHandle *handle);
 
 /**
  * @brief draw_bitmap   str转化的字符，绘制到buf图像(rgba图)上
@@ -71,7 +71,7 @@ void closeFreetype(FreetypeHadle *hadle);
  * @param buf_height    要绘制到的图像的高
  * @param rgba          要绘制到图像的字的颜色如（0xffffffff）
  */
-int str2rgba(const FreetypeHadle *hadle, wchar_t *str,int len,
+int str2rgba(const FreetypeHandle *handle, wchar_t *str,int len,
               signed int x, signed int y,
               unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba);
 #ifdef __cplusplus

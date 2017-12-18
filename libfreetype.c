@@ -6,18 +6,18 @@
 #include <freetype/ftglyph.h>
 
 #include "libfreetype.h"
-typedef struct FreetypeHadle_
+typedef struct FreetypeHandle_
 {
     FT_Bitmap   *bitmap;
     FT_Library  ft2_library;
     FT_Face		ft2_face;
     unsigned int size;
-}FreetypeHadle;
+}FreetypeHandle;
 
-void draw_bitmap( const FreetypeHadle *hadle,signed int x,signed int y,
+void draw_bitmap( const FreetypeHandle *handle,signed int x,signed int y,
                   unsigned char* buf,signed int buf_width,signed int buf_height,const char byte)
 {
-    FT_Bitmap* bitmap= &hadle->ft2_face->glyph->bitmap;
+    FT_Bitmap* bitmap= &handle->ft2_face->glyph->bitmap;
     signed int  i, j, p, q;
     signed int  x_max = x + bitmap->width;
     signed int  y_max = y + bitmap->rows;
@@ -39,10 +39,10 @@ void draw_bitmap( const FreetypeHadle *hadle,signed int x,signed int y,
         }
     }
 }
-void draw_rgba( const FreetypeHadle *hadle,signed int x,signed int y,
+void draw_rgba( const FreetypeHandle *handle,signed int x,signed int y,
                   unsigned char* buf,signed int buf_width,signed int buf_height,signed int rgba)
 {
-    FT_Bitmap* bitmap= &hadle->ft2_face->glyph->bitmap;
+    FT_Bitmap* bitmap= &handle->ft2_face->glyph->bitmap;
     signed int  i, j, p, q;
     signed int  x_max = x + bitmap->width;
     signed int  y_max = y + bitmap->rows;
@@ -66,75 +66,75 @@ void draw_rgba( const FreetypeHadle *hadle,signed int x,signed int y,
     }
 }
 
-int char2ftbitmap(wchar_t ch,const FreetypeHadle *hadle,unsigned int *width,unsigned int *height)
+int char2ftbitmap(wchar_t ch,const FreetypeHandle *handle,unsigned int *width,unsigned int *height)
 {
-    if(FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT ) &&
-                FT_Load_Glyph( hadle->ft2_face, FT_Get_Char_Index(hadle->ft2_face, ch), FT_LOAD_DEFAULT ))
+    if(FT_Load_Glyph( handle->ft2_face, FT_Get_Char_Index(handle->ft2_face, ch), FT_LOAD_NO_BITMAP | FT_LOAD_DEFAULT ) &&
+                FT_Load_Glyph( handle->ft2_face, FT_Get_Char_Index(handle->ft2_face, ch), FT_LOAD_DEFAULT ))
     {
         return -1;
     }
     //	FT_Load_Char(ft2_face, ucode, FT_LOAD_DEFAULT );
 
-    if(FT_Render_Glyph( hadle->ft2_face->glyph, FT_RENDER_MODE_NORMAL))
+    if(FT_Render_Glyph( handle->ft2_face->glyph, FT_RENDER_MODE_NORMAL))
     {
         return -1;
     }
     if(width != NULL)
     {
-        *width = hadle->ft2_face->glyph->bitmap.width;
+        *width = handle->ft2_face->glyph->bitmap.width;
     }
     if(height != NULL)
     {
-        *height = hadle->ft2_face->glyph->bitmap_top;
+        *height = handle->ft2_face->glyph->bitmap_top;
     }
     return 0;
 }
-FreetypeHadle *initFreetype(const char *ttf_path, unsigned int size)
+FreetypeHandle *initFreetype(const char *ttf_path, unsigned int size)
 {
-    FreetypeHadle *hadle =(FreetypeHadle *)malloc(sizeof(FreetypeHadle)) ;
+    FreetypeHandle *handle =(FreetypeHandle *)malloc(sizeof(FreetypeHandle)) ;
     FT_Error	err;
     /* Init freetype library */
-    err = FT_Init_FreeType(&hadle->ft2_library);
+    err = FT_Init_FreeType(&handle->ft2_library);
     if (err != FT_Err_Ok)
     {
         return NULL;
     }
-    err = FT_New_Face( hadle->ft2_library, ttf_path, 0, &hadle->ft2_face );
+    err = FT_New_Face( handle->ft2_library, ttf_path, 0, &handle->ft2_face );
     if (err != FT_Err_Ok)
     {
         return NULL;
     }
-    err = FT_Set_Pixel_Sizes( hadle->ft2_face, 0, size);
+    err = FT_Set_Pixel_Sizes( handle->ft2_face, 0, size);
     if (err != FT_Err_Ok)
     {
         return NULL;
     }
-    FT_Select_Charmap( hadle->ft2_face, FT_ENCODING_UNICODE);
+    FT_Select_Charmap( handle->ft2_face, FT_ENCODING_UNICODE);
 
-    return hadle;
+    return handle;
 }
-void closeFreetype(FreetypeHadle *hadle)
+void closeFreetype(FreetypeHandle *handle)
 {
-    if(hadle != NULL)
+    if(handle != NULL)
     {
-        FT_Done_Face( hadle->ft2_face );
-        FT_Done_FreeType( hadle->ft2_library );
-        free(hadle);
+        FT_Done_Face( handle->ft2_face );
+        FT_Done_FreeType( handle->ft2_library );
+        free(handle);
     }
 }
-int str2rgba(const FreetypeHadle *hadle, wchar_t *str,int len,
+int str2rgba(const FreetypeHandle *handle, wchar_t *str,int len,
               signed int x, signed int y,
               unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba)
 {
     unsigned int w = 0 ,h = 0;
     for(int i = 0 ; i<len;i++)
     {
-        if(char2ftbitmap(str[i],hadle,&w,&h) == -1)
+        if(char2ftbitmap(str[i],handle,&w,&h) == -1)
         {
             return -1;
         }
-        y = hadle->size - h;
-        draw_rgba(hadle,x,y,
+        y = handle->size - h;
+        draw_rgba(handle,x,y,
                    buf,buf_width,buf_height,rgba);
         x+=w+6;
     }
