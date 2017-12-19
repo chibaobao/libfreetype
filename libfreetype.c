@@ -110,7 +110,7 @@ FreetypeHandle *initFreetype(const char *ttf_path, unsigned int size)
         return NULL;
     }
     FT_Select_Charmap( handle->ft2_face, FT_ENCODING_UNICODE);
-
+    handle->size = size;
     return handle;
 }
 void closeFreetype(FreetypeHandle *handle)
