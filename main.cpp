@@ -14,7 +14,7 @@ int main()
     FreetypeHandle * handle = initFreetype("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",size);
 
     QImage img2(640,480,QImage::Format_RGBA8888);
-    for(int i = 0 ; i<sizeof(aaa)/4;i++)
+    for(unsigned int i = 0 ; i<sizeof(aaa)/4;i++)
     {
         if(char2ftbitmap(aaa[i],handle,&w,&h) == -1)
         {

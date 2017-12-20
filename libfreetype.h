@@ -6,6 +6,7 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdio.h>
+#include <stdint.h>
 typedef struct FT_Bitmap_ FT_Bitmap;
 typedef struct FreetypeHandle_ FreetypeHandle;
 
@@ -32,8 +33,8 @@ void draw_bitmap(const FreetypeHandle *handle, signed int x, signed int y,
  * @param buf_height    要绘制到的图像的高
  * @param byte          要绘制到图像的字的颜色如（0xffffffff）
  */
-void draw_rgba( const FreetypeHandle *handle,signed int x,signed int y,
-                  unsigned char* buf,signed int buf_width,signed int buf_height,signed int rgba);
+void draw_rgba(const FreetypeHandle *handle, signed int x, signed int y,
+                  unsigned char* buf, signed int buf_width, signed int buf_height, int32_t rgba);
 
 /**
  * @brief char2bitmap   将一个字符转化成FT_Bitmap类型
@@ -73,7 +74,7 @@ void closeFreetype(FreetypeHandle *handle);
  */
 int str2rgba(const FreetypeHandle *handle, wchar_t *str,int len,
               signed int x, signed int y,
-              unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba);
+              unsigned char* buf, signed int buf_width, signed int buf_height, int32_t rgba);
 #ifdef __cplusplus
 }
 #endif

@@ -40,13 +40,13 @@ void draw_bitmap( const FreetypeHandle *handle,signed int x,signed int y,
     }
 }
 void draw_rgba( const FreetypeHandle *handle,signed int x,signed int y,
-                  unsigned char* buf,signed int buf_width,signed int buf_height,signed int rgba)
+                  unsigned char* buf,signed int buf_width,signed int buf_height,int32_t rgba)
 {
     FT_Bitmap* bitmap= &handle->ft2_face->glyph->bitmap;
     signed int  i, j, p, q;
     signed int  x_max = x + bitmap->width;
     signed int  y_max = y + bitmap->rows;
-    signed int* buf_tmp =(signed int*)buf ;
+    int32_t* buf_tmp =(int32_t*)buf ;
 
 
     for ( i = x, p = 0; i < x_max; i++, p++ )
@@ -122,9 +122,9 @@ void closeFreetype(FreetypeHandle *handle)
         free(handle);
     }
 }
-int str2rgba(const FreetypeHandle *handle, wchar_t *str,int len,
+int str2rgba(const FreetypeHandle *handle, wchar_t *str, int len,
               signed int x, signed int y,
-              unsigned char* buf, signed int buf_width, signed int buf_height, signed int rgba)
+              unsigned char* buf, signed int buf_width, signed int buf_height, int32_t rgba)
 {
     unsigned int w = 0 ,h = 0;
     for(int i = 0 ; i<len;i++)
