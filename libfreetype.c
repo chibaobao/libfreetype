@@ -129,14 +129,21 @@ int str2rgba(const FreetypeHandle *handle, wchar_t *str, int len,
     unsigned int w = 0 ,h = 0;
     for(int i = 0 ; i<len;i++)
     {
-        if(char2ftbitmap(str[i],handle,&w,&h) == -1)
+        if(str[i] == L' ')
         {
-            return -1;
+            w= handle->size/2;
         }
-        y = handle->size - h;
-        draw_rgba(handle,x,y,
-                   buf,buf_width,buf_height,rgba);
-        x+=w+6;
+        else
+        {
+            if(char2ftbitmap(str[i],handle,&w,&h) == -1)
+            {
+                return -1;
+            }
+            y = handle->size - h;
+            draw_rgba(handle,x,y,
+                      buf,buf_width,buf_height,rgba);
+        }
+        x+=w+6;//字间距固定6像素
     }
     return 0;
 }
