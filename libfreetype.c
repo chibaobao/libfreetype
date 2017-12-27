@@ -147,3 +147,31 @@ int str2rgba(const FreetypeHandle *handle, wchar_t *str, int len,
     }
     return 0;
 }
+
+void drawRectangle (unsigned char* buf,int width,int height,
+                    int x1,int y1,int x2,int y2,int32_t rgba)
+{
+    int wide =3;
+    int32_t *tmp_buf = (int32_t*)buf;
+    if(x1<0 || y1<0|| x2>width || y2>height || buf == NULL)
+    {
+        return;
+    }
+    for(int i = 0;i<x2-x1;i++)
+    {
+        for(int j = 0;j < wide;j++)
+        {
+            *(tmp_buf + width*(y1+j) +x1 +i) = rgba;
+            *(tmp_buf + width*(y2-j) +x1 +i) = rgba;
+        }
+    }
+
+    for(int i = 0;i<y2-y1;i++)
+    {
+        for(int j = 0;j < wide;j++)
+        {
+            *(tmp_buf + width*(y1+i) +x1 +j) = rgba;
+            *(tmp_buf + width*(y2-i) +x2 -j) = rgba;
+        }
+    }
+}

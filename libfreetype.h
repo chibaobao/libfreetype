@@ -75,6 +75,21 @@ void closeFreetype(FreetypeHandle *handle);
 int str2rgba(const FreetypeHandle *handle, wchar_t *str,int len,
               signed int x, signed int y,
               unsigned char* buf, signed int buf_width, signed int buf_height, int32_t rgba);
+
+
+/**
+ * @brief drawRectangle 绘制一个矩形(宽度固定 wide =3)
+ * @param buf           原图像(画布)的buf
+ * @param width         原图像的宽
+ * @param height        原图像的高
+ * @param x1            矩形左上角坐标
+ * @param y1            矩形左上角坐标
+ * @param x2            矩形右下角坐标
+ * @param y2            矩形右下角坐标
+ * @param rgba          存储一个rgba值，如0xFF303099
+ */
+void drawRectangle (unsigned char* buf,int width,int height,
+                    int x1,int y1,int x2,int y2,int32_t rgba);
 #ifdef __cplusplus
 }
 #endif

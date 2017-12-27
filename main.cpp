@@ -41,6 +41,10 @@ int main()
     str2rgba(handle,aaa,sizeof(aaa)/4,
                 0,0,
                (unsigned char*)img3.bits(),img3.width(),img3.height(),0xFF303099);
+
+    drawRectangle((unsigned char*)img3.bits(),img3.width(),img3.height(),
+                  160,120,480,360,0xFF303099);
+
     img3.save("ccc.bmp");
 
 
@@ -48,3 +52,20 @@ int main()
 
     closeFreetype(handle);
 }
+using namespace std;
+int main1(int argc, char *argv[])
+{
+
+    int a = 0;
+    int b = 0;
+    int const c = 0;
+    int d = 0;
+    printf("%p-%p-%p-%p\n",&a,&b,&c,&d);
+
+    int *p = (int*)&c;
+    *p = 100;
+    printf("%d\n",c);
+
+    return 0;
+}
+
