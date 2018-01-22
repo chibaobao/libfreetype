@@ -139,8 +139,8 @@ int str2rgba(const FreetypeHandle *handle, wchar_t *str, int len,
             {
                 return -1;
             }
-            y = handle->size - h;
-            draw_rgba(handle,x,y,
+            int tmp_y = y + (handle->size - h);
+            draw_rgba(handle,x,tmp_y,
                       buf,buf_width,buf_height,rgba);
         }
         x+=w+6;//字间距固定6像素
