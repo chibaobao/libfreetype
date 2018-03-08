@@ -9,14 +9,7 @@ extern "C" {
 #include <stdint.h>
 typedef struct FT_Bitmap_ FT_Bitmap;
 typedef struct FreetypeHandle_ FreetypeHandle;
-/*************************************
- * 使用方式：1.initFreetype --> char2ftbitmap(Freetype的私有类型bitmap) --> draw_rgba/draw_bitmap --> closeFreetype
- *          2.initFreetype --> str2rgba --> closeFreetype
- *
- * 其中str2rgba是封装了通过for循环char2ftbitmap + draw_rgba来渲染一串字符
- * char2ftbitmap是将一个字符转换成Freetype的私有类型bitmap，存入hadle中，
- * 因此draw_rgba/draw_bitmap是对上一次char2ftbitmap的字符做转换的
- * ************************************/
+
 /**
  * @brief draw_bitmap   将freetype句柄中char2bitmap转化的字符，绘制到buf图像(8位灰度图)上
  * @param handle         一个freetype句柄
@@ -85,7 +78,7 @@ int str2rgba(const FreetypeHandle *handle, wchar_t *str,int len,
 
 
 /**
- * @brief drawRectangle 绘制一个矩形，是一个单独函数与以上系列函数无关(宽度固定 wide =3)
+ * @brief drawRectangle 绘制一个矩形(宽度固定 wide =3)
  * @param buf           原图像(画布)的buf
  * @param width         原图像的宽
  * @param height        原图像的高

@@ -153,7 +153,7 @@ void drawRectangle (unsigned char* buf,int width,int height,
 {
     int wide =3;
     int32_t *tmp_buf = (int32_t*)buf;
-    if(x1<0 || y1<0|| x2>width || y2>height || buf == NULL)
+    if(x1<0 || y1<0|| x2>=width || y2>=height || buf == NULL)
     {
         return;
     }
